@@ -4,7 +4,7 @@ need to patched version of the `primitive`, `vector`, and `dph` libraries. You
 can check out a complete source tree using the `bin/ghc-simd-clone.sh`
 script. For example:
 
-    ./bin/ghc-simd-clone.sh http://darcs.haskell.org/ghc.git ghc-simd
+    ./bin/ghc-simd-clone.sh http://git.haskell.org/ghc.git ghc-simd
 
 This will check out the simd branch of ghc in ghc-simd, perform a `sync-all
 get`, and then check out the simd branches of the `primitive`, `vector`, and

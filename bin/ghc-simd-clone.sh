@@ -4,9 +4,11 @@ set -e
 SRC=$1; shift
 DST=$1; shift
 
-git clone ${SRC} ${DST}
+if ! [ -d "$DST" ]; then
+	git clone ${SRC} ${DST}
+fi
 cd ${DST}
-git checkout simd
+git checkout wip/simd
 
 ./sync-all get
 
@@ -17,7 +19,7 @@ for LIB in primitive vector dph; do
 done
 
 cat >simd.fp <<EOF
-.|30a669a96ec824b78a5cfa988c5784f5a6cc162a
+.|25eeb6782a8f8cfdd3d8e9515863007c609eafc7
 ghc-tarballs|18e0c37f8023abf469af991e2fc2d3b024319c27
 libraries/Cabal|24bdc9b8862d228656ea2b5b0bd6307cb985819e
 libraries/Win32|1f9f7175e747aad7c424f5b12be5b95f15286f0b
@@ -28,7 +30,7 @@ libraries/bytestring|9692aaf0bf9b203f9249a1414637328fd31fc04a
 libraries/containers|41bc140a140143fa517df4c1a08365474cde4d14
 libraries/deepseq|420507ea418db8664a79aedaa6588b772e8c97c6
 libraries/directory|2334e09412f51bf847f3e23710daa566e561817f
-libraries/dph|148c2edb4bb4778b676410ded2a3ac668aee5d35
+libraries/dph|742078c9e18b7dcf6526348e08d2dd16e2334739
 libraries/filepath|abf31a9aef45d2119a5757dafbe4adf611388ee8
 libraries/ghc-prim|dbe66a7ea2e109d3c7744badf5e0b434f3d0f2a7
 libraries/haskeline|3a92ddd63d4edc622ad4af044c5b664aa64c3dd4
@@ -41,7 +43,7 @@ libraries/integer-simple|30c4af5165f181ef4f089b3d245371230f0aafad
 libraries/old-locale|df98c76b078de507ba2f7f23d4473c0ea09d5686
 libraries/old-time|7e0df2eb500ce4381725b868440fde04fa139956
 libraries/pretty|0b8eada2d4d62dd09ee361d8b6ca9b13e6573202
-libraries/primitive|21fd4d055a26552919d06fbf7433f72289969043
+libraries/primitive|c766007932fa63aaf9c1547763d75433997cf962
 libraries/process|ab7e650c7a1301cc53f28356fbd84661bd435bb0
 libraries/random|4b68afd3356674f12a67a4e381fa9becd704fab2
 libraries/template-haskell|77a92240b257e8d7b35e7ceccb3e953782bfaa4a
@@ -49,7 +51,7 @@ libraries/terminfo|116d3ee6840d52bab69c880d775ae290a20d64bc
 libraries/time|12ba4321d34d646cf9040ad12810c4257d26ade9
 libraries/transformers|a59fb93860f84ccd44178dcbbb82cfea7e02cd07
 libraries/unix|6e900d020129afef7b424a6cdef98f703821d4b9
-libraries/vector|91f6804a0ee324f46d38f3a071c943c0eff82db8
+libraries/vector|11b51820681cce94c5bc733c67a851d1878c97b7
 libraries/xhtml|fb9e0bbb69e15873682a9f25d39652099a3ccac1
 nofib|e55a9f0895d35dae77dcedf23de07bddc9b62330
 testsuite|4c7888408916c14090247f537adb1c7e38a1cfbc
