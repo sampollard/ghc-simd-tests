@@ -1,15 +1,15 @@
-GHCBIN	?= $(HOME)/ghc/ghc-simd-build/inplace/bin
-#GHCBIN	?= /5playpen/gmainlan/ghc-simd-build/inplace/bin
+GHCBIN	?= ghc-simd/inplace/bin
 GHC	?= $(GHCBIN)/ghc-stage2
+GHC_VER ?= $(shell $(GHC) --version | tr ' ' '\n' | tail -n 1)
 GHCPKG	?= $(GHCBIN)/ghc-pkg
 CABAL	?= $(GHCBIN)/ghc-cabal
 
 BLITZ    ?= external/blitz-0.10
-BOOST    ?= external/boost_1_53_0
+BOOST    ?= $(BOOST_ROOT)
 EIGEN    ?= external/eigen-eigen-5097c01bcdc4
 SALT     ?= external/SALT
-GOTOBLAS ?= $(HOME)/software/GotoBLAS2
-GCC      ?= $(HOME)/local/gcc-4.7.2-linux-x86_64/bin/gcc
+BLAS     ?= /usr/lib/x86_64-linux-gnu
+GCC      ?= gcc
 ICC      ?= icc
 
 LLVMOPT = opt
@@ -17,7 +17,8 @@ LLVMLLC = llc
 
 GHCFLAGS+=$(EXTRAGHCFLAGS)
 
-GHCFLAGS+=-Werror
+# -v for verbose errors. Also ensuring we're using a cabal sandbox for packages
+GHCFLAGS+=-Werror -v -package-db=$(shell echo .cabal-sandbox/*ghc-$(GHC_VER)-packages.conf.d)
 
 GHCFLAGS+=-DEIGEN_VECTORIZE_SSE4_2 -DNDEBUG
 
@@ -42,18 +43,18 @@ GHCFLAGS+= \
 	-hide-all-packages \
 	-package base \
 	-package deepseq \
-	-package dph-lifted-vseg \
 	-package ghc-prim \
 	-package primitive \
 	-package random \
 	-package time \
 	-package vector
+	# -package dph-lifted-vseg \
 
 GHCFLAGS+=-I$(BLITZ)
 GHCFLAGS+=-I$(SALT)
 GHCFLAGS+=-I$(BOOST)
 GHCFLAGS+=-I$(EIGEN)
-GHCFLAGS+=-I$(GOTOBLAS) $(GOTOBLAS)/libgoto2.a
+GHCFLAGS+=-I$(BLAS) $(BLAS)/libblas.a
 GHCFLAGS+=-lstdc++
 
 #GHCFLAGS+=-pgmlo=$(LLVMOPT) -pgmlc=$(LLVMLLC)
