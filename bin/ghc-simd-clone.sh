@@ -14,14 +14,6 @@ if ! [ -d "$DST" ]; then
 fi
 cd $DST
 
-if ! [ -d libraries/vector ]; then
-	cd libraries/vector
-	git remote add github git@github.com:sampollard/vector.git
-	git fetch github
-	git checkout -b simd-0.12.0.1 github/master
-	cd ../../
-fi
-
 sed -e 's/#BuildFlavour = quick-llvm/BuildFlavour = quick-llvm/' <mk/build.mk.sample >mk/build.mk
 
 # Build ghc
@@ -82,10 +74,40 @@ make install
 # SALT - I can't find this package.
 
 # Cabal sandbox to install local dependencies
+if [ -d libraries/vector ]; then
+	cd libraries/vector
+	git remote add github git@github.com:sampollard/vector.git
+	git fetch github
+	git checkout simd
+	cd ../../
+else
+	echo "Clone into ghc-simd/libraries/vector"
+	exit 1
+fi
+
+if [ -d libraries/primitive ]; then
+	cd libraries/primitive
+	git remote add github git@github.com:sampollard/primitive.git
+	git fetch github
+	git checkout simd
+	cd ../../
+else
+	echo "Clone into ghc-simd/libraries/primitive"
+	exit 1
+fi
+
 GHCBIN=$ROOT/ghc-simd/inplace/bin
 GHC=$GHCBIN/ghc-stage2
 cd $ROOT
+GHC_VERSION=$($GHC --version | awk '{print $NF}')
+SANDBOX_LIB=$ROOT/.cabal-sandbox/lib/x86_64-linux-ghc-$GHC_VERSION
+echo -e "package-db: $SANDBOX\n" > cabal.config
 cabal sandbox init
+cabal sandbox add-source $ROOT/ghc-simd/libraries/vector
+cabal sandbox add-source $ROOT/ghc-simd/libraries/primitive
+# Alternatively, just to test, $GHCBIN/runghc -w $GHC -- Setup.hs configure --prefix=$SANDBOX_LIB
+cabal install -w $GHC primitive
 cabal install -w $GHC vector
 cabal install -w $GHC deepseq
 cabal install -w $GHC random
+
