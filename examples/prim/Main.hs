@@ -20,7 +20,7 @@ main = do
     -- print $ FX4# (baz v# 10)
     -- print $ FX4# (zop v# 3)
   where
-    !v# = packFloatX4# 1.0# 2.0# 3.0# 4.0#
+    !v# = packFloatX4# (# 1.0#, 2.0#, 3.0#, 4.0# #)
 
 foo :: FloatX4# -> FloatX4#
 {-# NOINLINE foo #-}

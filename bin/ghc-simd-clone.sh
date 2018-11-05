@@ -106,8 +106,8 @@ cabal sandbox init
 cabal sandbox add-source $ROOT/ghc-simd/libraries/vector
 cabal sandbox add-source $ROOT/ghc-simd/libraries/primitive
 # Alternatively, just to test, $GHCBIN/runghc -w $GHC -- Setup.hs configure --prefix=$SANDBOX_LIB
-cabal install -w $GHC primitive
-cabal install -w $GHC vector
-cabal install -w $GHC deepseq
-cabal install -w $GHC random
+cabal install -w $GHC primitive --ghc-options=-fllvm
+cabal install -w $GHC vector --ghc-options=-fllvm
+cabal install -w $GHC deepseq --ghc-options=-fllvm
+cabal install -w $GHC random --ghc-options=-fllvm
 
